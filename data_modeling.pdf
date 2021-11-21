@@ -1,0 +1,97 @@
+CREATE TABLE "users" (
+	"user_id" serial NOT NULL,
+	"username" serial(255) NOT NULL,
+	"password" serial(255) NOT NULL DEFAULT,
+	"recipe_view" int NOT NULL DEFAULT,
+	"create_ occasion" integer(0) NOT NULL DEFAULT,
+	CONSTRAINT "users_pk" PRIMARY KEY ("user_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "recipe" (
+	"recipe_id" serial(50) NOT NULL,
+	"recipe_name" varchar(50) NOT NULL DEFAULT 'NOT NULL',
+	"occasion_id" integer(50) NOT NULL DEFAULT 'NOT NULL',
+	"instruction_id" integer NOT NULL,
+	"recipe_status" BOOLEAN NOT NULL DEFAULT 'falae',
+	"recipe_ingredient" varchar(50) NOT NULL DEFAULT 'NOT NULL',
+	CONSTRAINT "recipe_pk" PRIMARY KEY ("recipe_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "grocery_list" (
+	"grocery_list_id" serial NOT NULL,
+	"grocery_item_name" varchar(50) NOT NULL DEFAULT 'NOT NULL',
+	"recipe_ingredient" integer NOT NULL DEFAULT 'NOT NULL',
+	CONSTRAINT "grocery_list_pk" PRIMARY KEY ("grocery_list_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "ingredient" (
+	"ingredient_id" serial(50) NOT NULL,
+	"ingredient_name" integer NOT NULL DEFAULT 'NOT NULL',
+	"user_id" integer NOT NULL DEFAULT 'NOT NULL',
+	CONSTRAINT "ingredient_pk" PRIMARY KEY ("ingredient_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "occasions" (
+	"occasion_id" serial NOT NULL,
+	"occasion_name" varchar(255) NOT NULL DEFAULT 'NOT NULL',
+	"recipes" varchar(255) NOT NULL DEFAULT 'NOT NULL',
+	"user_id" integer NOT NULL DEFAULT 'NOT NULL',
+	"plate" integer NOT NULL DEFAULT 'NOT NULL',
+	CONSTRAINT "occasions_pk" PRIMARY KEY ("occasion_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "instructions" (
+	"instruction_id" serial NOT NULL,
+	"instruction_name" varchar(50) NOT NULL DEFAULT 'NOT NULL',
+	"ingredients_id" integer NOT NULL DEFAULT 'NOT NULL',
+	CONSTRAINT "instructions_pk" PRIMARY KEY ("instruction_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+ALTER TABLE "users" ADD CONSTRAINT "users_fk0" FOREIGN KEY ("recipe_view") REFERENCES "recipe"("recipe_id");
+ALTER TABLE "users" ADD CONSTRAINT "users_fk1" FOREIGN KEY ("create_ occasion") REFERENCES "occasions"("occasion_id");
+
+ALTER TABLE "recipe" ADD CONSTRAINT "recipe_fk0" FOREIGN KEY ("occasion_id") REFERENCES "occasions"("occasion_id");
+ALTER TABLE "recipe" ADD CONSTRAINT "recipe_fk1" FOREIGN KEY ("instruction_id") REFERENCES "instructions"("instruction_id");
+ALTER TABLE "recipe" ADD CONSTRAINT "recipe_fk2" FOREIGN KEY ("recipe_status") REFERENCES "users"("user_id");
+ALTER TABLE "recipe" ADD CONSTRAINT "recipe_fk3" FOREIGN KEY ("recipe_ingredient") REFERENCES "users"("user_id");
+
+ALTER TABLE "grocery_list" ADD CONSTRAINT "grocery_list_fk0" FOREIGN KEY ("recipe_ingredient") REFERENCES "ingredient"("ingredient_id");
+
+ALTER TABLE "ingredient" ADD CONSTRAINT "ingredient_fk0" FOREIGN KEY ("ingredient_name") REFERENCES "recipe"("recipe_id");
+ALTER TABLE "ingredient" ADD CONSTRAINT "ingredient_fk1" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");
+
+ALTER TABLE "occasions" ADD CONSTRAINT "occasions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");
+ALTER TABLE "occasions" ADD CONSTRAINT "occasions_fk1" FOREIGN KEY ("plate") REFERENCES "recipe"("recipe_id");
+
+ALTER TABLE "instructions" ADD CONSTRAINT "instructions_fk0" FOREIGN KEY ("ingredients_id") REFERENCES "ingredient"("ingredient_id");
+
+
+
+
+
+
+
